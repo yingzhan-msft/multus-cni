@@ -159,6 +159,13 @@ func LoadDelegateNetConf(bytes []byte, netElement *NetworkSelectionElement, devi
 // mergeCNIRuntimeConfig creates CNI runtimeconfig from delegate
 func mergeCNIRuntimeConfig(runtimeConfig *RuntimeConfig, delegate *DelegateNetConf) *RuntimeConfig {
 	logging.Debugf("mergeCNIRuntimeConfig: %v %v", runtimeConfig, delegate)
+	delegateJson, _ := json.Marshal(delegate)
+	runtimeConfigJson, _ := json.Marshal(runtimeConfig)
+	byte := string(delegate.Bytes)
+	logging.Debugf("delegateJson: %s", string(delegateJson))
+	logging.Debugf("delegate.DeviceID: %s", delegate.DeviceID)
+	logging.Debugf("delegateBytes: %s", byte)
+	logging.Debugf("runtimeConfigJson: %s", string(runtimeConfigJson))
 	var mergedRuntimeConfig RuntimeConfig
 
 	if runtimeConfig == nil {
@@ -205,7 +212,9 @@ func CreateCNIRuntimeConf(args *skel.CmdArgs, k8sArgs *K8sArgs, ifName string, r
 
 // newCNIRuntimeConf creates the CNI `RuntimeConf` for the given ADD / DEL request.
 func newCNIRuntimeConf(containerID, sandboxID, podName, podNamespace, podUID, netNs, ifName string, rc *RuntimeConfig, delegate *DelegateNetConf) (*libcni.RuntimeConf, string) {
-	logging.Debugf("LoadCNIRuntimeConf: %s, %v %v", ifName, rc, delegate)
+	rcJson, _ := json.Marshal(rc)
+	delegateJson, _ := json.Marshal(delegate)
+	logging.Debugf("LoadCNIRuntimeConf: %s, %s %s", ifName, string(rcJson), string(delegateJson))
 
 	delegateRc := delegateRuntimeConfig(containerID, delegate, rc, ifName)
 	// In part, adapted from K8s pkg/kubelet/dockershim/network/cni/cni.go#buildCNIRuntimeConf
@@ -296,14 +305,16 @@ func delegateRuntimeConfig(containerID string, delegate *DelegateNetConf, rc *Ru
 
 	if delegate != nil {
 		delegateRc = mergeCNIRuntimeConfig(rc, delegate)
-		if delegateRc.DeviceID != "" {
-			if delegateRc.CNIDeviceInfoFile != "" {
-				logging.Debugf("Warning: Existing value of CNIDeviceInfoFile will be overwritten %s", delegateRc.CNIDeviceInfoFile)
-			}
-			autoDeviceInfo := fmt.Sprintf("%s-%s_%s", delegate.Name, containerID, ifName)
-			delegateRc.CNIDeviceInfoFile = nadutils.GetCNIDeviceInfoPath(autoDeviceInfo)
-			logging.Debugf("Adding auto-generated CNIDeviceInfoFile: %s", delegateRc.CNIDeviceInfoFile)
+		delegateRcJson, _ := json.Marshal(delegateRc)
+		logging.Debugf("delegateRuntimeConfig: %s", string(delegateRcJson))
+		logging.Debugf("deviceID1: %s", delegateRc.DeviceID)
+		if delegateRc.CNIDeviceInfoFile != "" {
+			logging.Debugf("CNIDeviceInfoFile: %s", delegateRc.CNIDeviceInfoFile)
+			logging.Debugf("Warning: Existing value of CNIDeviceInfoFile will be overwritten %s", delegateRc.CNIDeviceInfoFile)
 		}
+		autoDeviceInfo := fmt.Sprintf("%s-%s_%s", delegate.Name, containerID, ifName)
+		delegateRc.CNIDeviceInfoFile = nadutils.GetCNIDeviceInfoPath(autoDeviceInfo)
+		logging.Debugf("Adding auto-generated CNIDeviceInfoFile: %s", delegateRc.CNIDeviceInfoFile)
 	} else {
 		delegateRc = rc
 	}
@@ -340,8 +351,9 @@ func GetDefaultNetConf() *NetConf {
 
 // LoadNetConf converts inputs (i.e. stdin) to NetConf
 func LoadNetConf(bytes []byte) (*NetConf, error) {
+	logging.Debugf("LoadNetConf yingzhan1: %s", string(bytes))
 	netconf := GetDefaultNetConf()
-
+	logging.Debugf("LoadNetConf yingzhan2: %s", string(bytes))
 	logging.Debugf("LoadNetConf: %s", string(bytes))
 	if err := json.Unmarshal(bytes, netconf); err != nil {
 		return nil, logging.Errorf("LoadNetConf: failed to load netconf: %v", err)

@@ -8,7 +8,7 @@ require (
 	github.com/containernetworking/plugins v1.1.0
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-logr/logr v1.3.0 // indirect
-	github.com/k8snetworkplumbingwg/network-attachment-definition-client v1.4.0
+	github.com/k8snetworkplumbingwg/network-attachment-definition-client v1.5.0
 	github.com/onsi/ginkgo/v2 v2.13.0
 	github.com/onsi/gomega v1.29.0
 	github.com/pkg/errors v0.9.1 // indirect
@@ -69,7 +69,6 @@ require (
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.12.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20230803162519-f966b187b2e5 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
@@ -82,6 +81,7 @@ require (
 
 replace (
 	github.com/gogo/protobuf => github.com/gogo/protobuf v1.3.2
+	github.com/k8snetworkplumbingwg/network-attachment-definition-client => github.com/yingzhan-msft/network-attachment-definition-client v1.5.0
 	k8s.io/api => k8s.io/api v0.29.0
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.29.0
 	k8s.io/apimachinery => k8s.io/apimachinery v0.29.0

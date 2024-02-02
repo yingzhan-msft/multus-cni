@@ -590,6 +590,7 @@ func GetPod(kubeClient *k8s.ClientInfo, podInformer cache.SharedIndexInformer, k
 func CmdAdd(args *skel.CmdArgs, exec invoke.Exec, kubeClient *k8s.ClientInfo, podInformer cache.SharedIndexInformer) (cnitypes.Result, error) {
 	n, err := types.LoadNetConf(args.StdinData)
 	logging.Debugf("CmdAdd: %v, %v, %v", args, exec, kubeClient)
+	logging.Debugf("yingzhan version v1.5.0")
 	if err != nil {
 		return nil, cmdErr(nil, "error loading netconf: %v", err)
 	}
