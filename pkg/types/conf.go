@@ -296,14 +296,12 @@ func delegateRuntimeConfig(containerID string, delegate *DelegateNetConf, rc *Ru
 
 	if delegate != nil {
 		delegateRc = mergeCNIRuntimeConfig(rc, delegate)
-		if delegateRc.DeviceID != "" {
-			if delegateRc.CNIDeviceInfoFile != "" {
-				logging.Debugf("Warning: Existing value of CNIDeviceInfoFile will be overwritten %s", delegateRc.CNIDeviceInfoFile)
-			}
-			autoDeviceInfo := fmt.Sprintf("%s-%s_%s", delegate.Name, containerID, ifName)
-			delegateRc.CNIDeviceInfoFile = nadutils.GetCNIDeviceInfoPath(autoDeviceInfo)
-			logging.Debugf("Adding auto-generated CNIDeviceInfoFile: %s", delegateRc.CNIDeviceInfoFile)
+		if delegateRc.CNIDeviceInfoFile != "" {
+			logging.Debugf("Warning: Existing value of CNIDeviceInfoFile will be overwritten %s", delegateRc.CNIDeviceInfoFile)
 		}
+		autoDeviceInfo := fmt.Sprintf("%s-%s_%s", delegate.Name, containerID, ifName)
+		delegateRc.CNIDeviceInfoFile = nadutils.GetCNIDeviceInfoPath(autoDeviceInfo)
+		logging.Debugf("Adding auto-generated CNIDeviceInfoFile: %s", delegateRc.CNIDeviceInfoFile)
 	} else {
 		delegateRc = rc
 	}
